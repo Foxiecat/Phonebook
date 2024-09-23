@@ -6,8 +6,8 @@ class Program
 {
     static void Main(string[] args)
     {
-        Contact[] contacts = ContactController.Generate();
-
+        Contact[] contacts = ContactController.Contacts;
+            
         Console.WriteLine(ContactController.Display(contacts[5]));
     }
 }
