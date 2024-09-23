@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.JavaScript;
 using static Phonebook.Features.Utilities;
 using Bogus;
 
@@ -6,7 +5,7 @@ namespace Phonebook.Features.Contacts;
 
 public class ContactController
 {
-    private Contact[] _contacts { get; set; } = new Contact[100];
+    public static Contact[] Contacts { get; private set; } = new Contact[100];
     
     public static string Display(Contact contact)
     {
@@ -22,10 +21,19 @@ public class ContactController
 
     public Contact[] Search(string criteria)
     {
-        throw new NotImplementedException();
+        Stack<Contact> contactsStack = new();
+        foreach (Contact contact in Contacts)
+        {
+            if (contact.FirstName.Contains(criteria) || contact.LastName.Contains(criteria) || contact.MobileNumber.Contains(criteria))
+            {
+                contactsStack.Push(contact);
+            }
+        }
+        
+        return contactsStack.ToArray();
     }
 
-    public Contact[] Sort(string criterion)
+    public Contact[] Sort(string criteria)
     {
         throw new NotImplementedException();
     }
@@ -34,7 +42,7 @@ public class ContactController
     /// Generates 100 fake Norwegian contacts.
     /// </summary>
     /// <returns>A new list of fake contacts</returns>
-    public static Contact[] Generate()
+    public static void Generate()
     {
         // Sets the Faker locale to Norwegian
         Faker faker = new("nb_NO");
@@ -47,7 +55,7 @@ public class ContactController
             {
                 FirstName = faker.Name.FirstName(),
                 LastName = faker.Name.LastName(),
-                MobileNumber = faker.Random.Int(40000000, 99999999),
+                MobileNumber = faker.Random.Int(40000000, 99999999).ToString(),
                 Birthday = faker.Date.Between(DateTime.Now.AddYears(-80), DateTime.Now.AddYears(-18)).ToString("dd/MM/yyyy"),
                 Address = faker.Address.StreetAddress() + ", " + faker.Address.City()
             };
@@ -60,7 +68,7 @@ public class ContactController
         
         // Writes a JSON file from the jsonString
         File.WriteAllText("../../../Logs/contacts.json", jsonString);
-        
-        return fakeContacts;
+
+        Contacts = fakeContacts;
     }
 }
