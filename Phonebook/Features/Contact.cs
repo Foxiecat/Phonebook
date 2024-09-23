@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace Phonebook.Features;
 
 public class Contact
@@ -15,5 +17,11 @@ public class Contact
         MobileNumber = mobileNumber;
         Birthday = birthday;
         Address = address;
+    }
+    
+    public string? GetProperty(string propertyName)
+    {
+        //This is where we acquire the property value by its name
+        return (string)GetType().GetProperty(propertyName).GetValue(this);
     }
 }

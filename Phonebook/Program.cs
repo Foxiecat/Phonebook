@@ -6,6 +6,6 @@ class Program
     {
         Features.Phonebook.Generate();
 
-        
+        Features.Phonebook.Sort("FirstName", "Ascending");
     }
 }

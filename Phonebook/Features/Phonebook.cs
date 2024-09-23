@@ -6,16 +6,14 @@ namespace Phonebook.Features;
 
 public class Phonebook
 {
-    private static Contact[] contacts { get; set; } = new Contact[100];
+    private static Contact[] _contacts = new Contact[100];
     
     public static string Display(Contact contact)
     {
-        string contactCardString = $"""
-                                    Name         : {contact.FirstName} {contact.LastName}
-                                    Mobile Phone : {contact.MobileNumber}
-                                    Date of Birth: {contact.Birthday}
-                                    Address      : {contact.Address}
-                                    """;
+        string contactCardString = $"Name         : {contact.FirstName} {contact.LastName}" +
+                                   $"Mobile Phone : {contact.MobileNumber}" +
+                                   $"Date of Birth: {contact.Birthday}" +
+                                   $"Address      : {contact.Address}";
         
         return contactCardString;
     }
@@ -24,9 +22,9 @@ public class Phonebook
     {
         Stack<Contact> matchingContacts = new();
 
-        for (int index = 0; index < contacts.Length; index++)
+        for (int index = 0; index < _contacts.Length; index++)
         {
-            Contact contact = contacts[index];
+            Contact contact = _contacts[index];
             
             if (contact.FirstName.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
                 contact.LastName.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
@@ -41,24 +39,73 @@ public class Phonebook
         return matchingContacts.ToArray();
     }
 
-    public Contact[] Sort(string category, string orderBy)
+    public static void Sort(string category, string order)
     {
+        foreach (Contact contact in _contacts)
+        {
+            Console.WriteLine($"Unsorted: {contact.FirstName} {contact.LastName}");
+        }
         
+        QuickTextSort(_contacts, 0, _contacts.Length - 1, category, order);
+
+        foreach (Contact contact in _contacts)
+        {
+            Console.WriteLine($"Sorted: {contact.FirstName} {contact.LastName}");
+        }
     }
 
-    static void QuickSort<T>(Contact[] contacts, int left, int right, string propertyName)
+    static void QuickTextSort(Contact[] _contacts, int low, int high, string propertyName, string order)
     {
-        int leftIndex = left, rightIndex = right;
-        Contact pivot = contacts[(left + right) / 2];
-        Type fieldType = propertyName.GetType();
+        if (high <= low) return;
 
-        while (leftIndex <= rightIndex)
+        int j = Partition(_contacts, low, high, propertyName, order);
+
+        QuickTextSort(_contacts, low, j - 1, propertyName, order);
+        QuickTextSort(_contacts, j + 1, high, propertyName, order);
+    }
+
+    private static int Partition(Contact[] contactArray, int low, int high, string propertyName, string order)
+    {
+        //string pivot = contactArray[low].GetType().GetField(propertyName).ToString();
+        
+        string? pivot = contactArray[low].GetProperty(propertyName);
+        
+        int i = low;
+        int j = high + 1;
+
+        while (true)
         {
-            while (contacts[leftIndex].GetType().GetField("propertyName").Equals(pivot))
+            if (order == "Ascending")
             {
-                
+                while (String.Compare(contactArray[++i].GetProperty(propertyName), pivot) < 0)
+                { }
+
+                while (String.Compare(pivot, contactArray[--j].GetProperty(propertyName)) < 0)
+                { }
             }
+
+            if (order == "Descending")
+            {
+                while (String.Compare(contactArray[++i].GetProperty(propertyName), pivot) > 0)
+                { }
+
+                while (String.Compare(pivot, contactArray[--j].GetProperty(propertyName)) > 0)
+                { }
+            }
+            
+
+            if (i >= j) break;
+
+            Swap(contactArray, i, j);
         }
+        
+        Swap(contactArray, low, j);
+        return j;
+    }
+
+    static void Swap(Contact[] array, int first, int second)
+    {
+        (array[first], array[second]) = (array[second], array[first]);
     }
     
     /// <summary>
@@ -112,6 +159,6 @@ public class Phonebook
         // Writes a JSON file from the jsonString
         File.WriteAllText("../../../Logs/contacts.json", jsonString);
         
-        contacts = fakeContacts;
+        _contacts = fakeContacts;
     }
 }
