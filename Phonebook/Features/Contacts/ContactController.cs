@@ -6,8 +6,18 @@ namespace Phonebook.Features.Contacts;
 
 public class ContactController
 {
+    private Contact[] _contacts { get; set; } = new Contact[100];
+    
     public static string Display(Contact contact)
     {
+        string contactCardString = $"""
+                              Name         : {contact.FirstName} {contact.LastName}
+                              Mobile Phone : {contact.MobileNumber}
+                              Date of Birth: {contact.Birthday}
+                              Address      : {contact.Address}
+                              """;
+        
+        return contactCardString;
     }
 
     public Contact[] Search(string criteria)
