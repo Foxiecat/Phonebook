@@ -4,7 +4,7 @@ namespace Phonebook.Features;
 
 public class Phonebook
 {
-    private static Contact[] _contacts = new Contact[100];
+    public static Contact[] Contacts = new Contact[100];
     
     public static string Display(Contact contact)
     {
@@ -20,7 +20,7 @@ public class Phonebook
 
     public static void DisplayAll()
     {
-        foreach (Contact contact in _contacts)                    
+        foreach (Contact contact in Contacts)                    
         {
             Console.WriteLine($"{contact.FirstName} {contact.LastName}, {contact.MobileNumber}" + "\n");
         }
@@ -30,9 +30,9 @@ public class Phonebook
     {
         Stack<Contact> matchingContacts = new();
 
-        for (int index = 0; index < _contacts.Length; index++)
+        for (int index = 0; index < Contacts.Length; index++)
         {
-            Contact contact = _contacts[index];
+            Contact contact = Contacts[index];
             
             if (contact.FirstName.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
                 contact.LastName.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
@@ -49,11 +49,11 @@ public class Phonebook
 
     public static void Sort(string category, string order)
     {
-        quicksort.QuickTextSort(_contacts, 0, _contacts.Length - 1, category, order);
+        quicksort.QuickTextSort(Contacts, 0, Contacts.Length - 1, category, order);
     }
 
     public static void GenerateContacts()
     {
-        _contacts = Generate.GenerateFakeContacts();
+        Contacts = Generate.GenerateFakeContacts();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Phonebook.Features.Menu;
-using static Phonebook.Features.Menu.MainMenu;
 using static Phonebook.Features.Phonebook;
 
 namespace Phonebook;
@@ -12,6 +11,7 @@ class Program
         GenerateContacts();
         Console.WriteLine("Fake Contacts Generated\n");
         
-        //RenderMenu();
+        MainMenu mainMenu = new();
+        mainMenu.Start();
     }
 }

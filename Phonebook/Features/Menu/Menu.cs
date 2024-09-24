@@ -1,23 +1,22 @@
 namespace Phonebook.Features.Menu;
 
-public class SearchMenu
+public class Menu
 {
     private string _prompt;
-    private List<string> _options;
-    private List<Contact> _contacts;
+    private string[] _options;
     private int _selectedIndex;
 
-    public SearchMenu(string prompt, List<Contact> contacts)
+    public Menu(string prompt, string[] options)
     {
         _prompt = prompt;
-        _contacts = contacts;
+        _options = options;
         _selectedIndex = 0;
     }
 
     private void DisplayOptions()
     {
         Console.WriteLine(_prompt);
-        for (int index = 0; index < _options.Count; index++)
+        for (int index = 0; index < _options.Length; index++)
         {
             string currentOption = _options[index];
             string prefix;
@@ -40,19 +39,13 @@ public class SearchMenu
         
         Console.ResetColor();
     }
-    
-    public Contact RunSearch()
+
+    public int Run()
     {
         ConsoleKey keyPressed;
         do
         {
             Console.Clear();
-            
-            foreach (Contact contact in _contacts)
-            {
-                _options.Add($"{contact.FirstName} {contact.LastName}, {contact.MobileNumber}");
-            }
-            
             DisplayOptions();
             
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -64,18 +57,18 @@ public class SearchMenu
                 _selectedIndex--;
                 
                 if (_selectedIndex == -1)
-                    _selectedIndex = _options.Count - 1;
+                    _selectedIndex = _options.Length - 1;
             }
             else if (keyPressed == ConsoleKey.DownArrow)
             {
                 _selectedIndex++;
                 
-                if (_selectedIndex == _options.Count)
+                if (_selectedIndex == _options.Length)
                     _selectedIndex = 0;
             }
             
         } while (keyPressed != ConsoleKey.Enter);
         
-        return _contacts[_selectedIndex];
+        return _selectedIndex;
     }
 }
