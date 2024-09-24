@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Interfaces\" />
       <Folder Include="Logs\" />
     </ItemGroup>
 

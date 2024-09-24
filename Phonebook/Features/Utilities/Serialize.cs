@@ -2,9 +2,9 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 
-namespace Phonebook.Features;
+namespace Phonebook.Features.Utilities;
 
-public class Utilities
+public class Serialize
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -12,7 +12,7 @@ public class Utilities
         Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
     };
 
-    public static string Serialize<T>(T value)
+    public static string Serializer<T>(T value)
     {
         return JsonSerializer.Serialize(value, JsonOptions);
     }
