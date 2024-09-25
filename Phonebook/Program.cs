@@ -7,9 +7,7 @@ class Program
 {
     static void Main(string[] args)
     { 
-        Console.WriteLine("Generating Fake Contacts...");
         GenerateContacts();
-        Console.WriteLine("Fake Contacts Generated\n");
         
         MainMenu mainMenu = new();
         mainMenu.Start();

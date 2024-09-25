@@ -50,21 +50,26 @@ public class Menu
             
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             keyPressed = keyInfo.Key;
-            
-            // Updates _selectedIndex based on arrow keys
-            if (keyPressed == ConsoleKey.UpArrow)
+
+            switch (keyPressed)
             {
-                _selectedIndex--;
+                // Updates _selectedIndex based on arrow keys
+                case ConsoleKey.UpArrow:
+                {
+                    _selectedIndex--;
                 
-                if (_selectedIndex == -1)
-                    _selectedIndex = _options.Length - 1;
-            }
-            else if (keyPressed == ConsoleKey.DownArrow)
-            {
-                _selectedIndex++;
+                    if (_selectedIndex == -1)
+                        _selectedIndex = _options.Length - 1;
+                    break;
+                }
+                case ConsoleKey.DownArrow:
+                {
+                    _selectedIndex++;
                 
-                if (_selectedIndex == _options.Length)
-                    _selectedIndex = 0;
+                    if (_selectedIndex == _options.Length)
+                        _selectedIndex = 0;
+                    break;
+                }
             }
             
         } while (keyPressed != ConsoleKey.Enter);

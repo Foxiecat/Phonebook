@@ -4,7 +4,7 @@ namespace Phonebook.Features;
 
 public class Phonebook
 {
-    public static Contact[] Contacts = new Contact[100];
+    private static Contact[] Contacts = new Contact[100];
     
     public static string Display(Contact contact)
     {

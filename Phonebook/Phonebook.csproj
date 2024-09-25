@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <Folder Include="Features\Interfaces\" />
-      <Folder Include="Features\Menu\Interfaces\" />
       <Folder Include="Logs\" />
     </ItemGroup>
 

@@ -1,4 +1,3 @@
-using static Phonebook.Features.Phonebook;
 namespace Phonebook.Features.Menu;
 
 public class MainMenu
@@ -31,26 +30,33 @@ public class MainMenu
                         (Use the Up and Down arrow keys to cycle through the options and press enter to select an option)
                         """;
         
-        string[] options = ["Search", "Sort", "Exit"];
+        string[] options = ["Display All", "Search", "Sort", "Exit"];
         
-        Menu mainMenu = new Menu(prompt, options);
+        Menu mainMenu = new(prompt, options);
         int selectedIndex = mainMenu.Run();
 
         switch (selectedIndex)
         {
             case 0:
-                Search();
+                Phonebook.DisplayAll();
+                Console.WriteLine("\nPress Any Key To Exit To Main Menu...");
+                Console.ReadKey(true);
+                RunMainMenu();
                 break;
             case 1:
-                Sort();
+                SearchMenu();
                 break;
             case 2:
+                SortMenu();
+                break;
+            case 3:
                 Exit();
                 break;
         }
     }
 
-    private void Search()
+    
+    private void SearchMenu()
     {
         Console.Clear();
         Console.WriteLine("Write a term (First/Lastname or phone number) to search for: ");
@@ -58,22 +64,48 @@ public class MainMenu
         string prompt = "Choose a contact for their full details: ";
         string searchContact = Console.ReadLine() ?? string.Empty;
 
-        List<Contact> contacts = Phonebook.Search(searchContact).ToList();
+        Contact[] contacts = Phonebook.Search(searchContact);
+        string[] searchResults = new string[contacts.Length];
 
-        SearchMenu searchMenu = new(prompt, contacts);
-        Contact selectedContact = searchMenu.RunSearch();
+        for (int index = 0; index < contacts.Length; index++)
+        {
+            searchResults[index] = $"{contacts[index].FirstName} {contacts[index].LastName}, {contacts[index].MobileNumber}";
+        }
+        
+        
+        Menu menu = new (prompt, searchResults);
+        int selectedContact = menu.Run();
+        
+        Contact contactDetails = contacts[selectedContact];
 
         Console.Clear();
-        Console.WriteLine(Display(selectedContact));
+        Console.WriteLine(Phonebook.Display(contactDetails));
         
         Console.WriteLine("\nPress Any Key To Exit To Main Menu...");
         Console.ReadKey(true);
         RunMainMenu();
     }
 
-    private void Sort()
+    
+    private void SortMenu()
     {
+        Console.Clear();
         
+        // Categories to sort by:
+        Console.WriteLine("What do you want to sort by (FirstName, LastName, MobileNumber, Birthday, Address?"); 
+        string userCategoryInput = Console.ReadLine() ?? string.Empty;
+        
+        // Which order to sort by:
+        Console.WriteLine("What order do you want to sort in (Ascending or Descending)?");
+        string userOrderInput = Console.ReadLine() ?? string.Empty;
+        
+        Phonebook.Sort(userCategoryInput, userOrderInput);
+        
+        // Display sorted list and Exits
+        Console.WriteLine("Phonebook as been sorted" +
+                          "\nPress Any Key To Exit To Main Menu...");
+        Console.ReadKey(true);
+        RunMainMenu();
     }
     
     private void Exit()
@@ -83,76 +115,4 @@ public class MainMenu
         
         Environment.Exit(0);
     }
-    
-    /*private static Options[] _options;
-
-    public static void RenderMenu()
-    { 
-        int index = 0;
-
-        _options =
-        [
-            new Options("Display All", DisplayAll),
-            new Options("Search", SearchMenu.SearchOption),
-            new Options("Sort", () => Sort("FirstName", "Ascending")),
-            new Options("Exit", () => Environment.Exit(0))
-        ];
-
-        WriteMenu(_options, _options[index = 0]);
-
-        {
-            ConsoleKeyInfo keyInfo;
-            do
-            {
-                keyInfo = Console.ReadKey();
-                switch (keyInfo.Key)
-                {
-                    case ConsoleKey.DownArrow:
-                    {
-                        if (index + 1 < _options.Length)
-                        {
-                            index++;
-                            WriteMenu(_options, _options[index]);
-                        }
-
-                        break;
-                    }
-                    case ConsoleKey.UpArrow:
-                    {
-                        if (index - 1 >= 0)
-                        {
-                            index--;
-                            WriteMenu(_options, _options[index]);
-                        }
-                        break;
-                    }
-                    case ConsoleKey.Enter:
-                    {
-                        _options[index].SelectedOption.Invoke();
-
-                        index = 0;
-                        break;
-                    }
-                }
-            } while (keyInfo.Key != ConsoleKey.X);
-
-            Console.ReadKey();
-        }
-    }
-
-
-    private static void WriteMenu(Options[] options, Options selectedOption)
-    {
-        Console.Clear();
-
-        foreach (Options option in options)
-        {
-            if (option == selectedOption)
-                Console.Write("> ");
-            if (option != selectedOption)
-                Console.Write($" ");
-
-            Console.WriteLine(option.MenuOption);
-        }
-    }*/
 }
