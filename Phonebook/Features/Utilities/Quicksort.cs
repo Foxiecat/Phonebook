@@ -1,6 +1,6 @@
 namespace Phonebook.Features.Utilities;
 
-public class quicksort
+public static class Quicksort
 {
     public static void QuickTextSort(Contact[] contacts, int low, int high, string propertyName, string order)
     {

@@ -1,11 +1,18 @@
+using static Phonebook.Features.Utilities.SearchCompare;
 using Phonebook.Features.Utilities;
 
 namespace Phonebook.Features;
 
 public class Phonebook
 {
-    private static Contact[] Contacts = new Contact[100];
+    private static Contact[] _contacts = new Contact[100];
     
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contact"></param>
+    /// <returns></returns>
     public static string Display(Contact contact)
     {
         string contactCardString = $"""
@@ -18,42 +25,39 @@ public class Phonebook
         return contactCardString;
     }
 
+    
     public static void DisplayAll()
     {
-        foreach (Contact contact in Contacts)                    
+        foreach (Contact contact in _contacts)                    
         {
             Console.WriteLine($"{contact.FirstName} {contact.LastName}, {contact.MobileNumber}" + "\n");
         }
     }
 
+    
     public static Contact[] Search(string criteria)
     {
-        Stack<Contact> matchingContacts = new();
+        ICollection<Contact> matchingContacts = [];
 
-        for (int index = 0; index < Contacts.Length; index++)
+        foreach (Contact contact in _contacts)
         {
-            Contact contact = Contacts[index];
-            
-            if (contact.FirstName.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
-                contact.LastName.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
-                contact.MobileNumber.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
-                contact.Birthday.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
-                contact.Address.Contains(criteria, StringComparison.OrdinalIgnoreCase))
+            if (Comparer(contact, criteria))
             {
-                matchingContacts.Push(contact);
+                matchingContacts.Add(contact);
             }
         }
 
         return matchingContacts.ToArray();
     }
-
+    
+    
     public static void Sort(string category, string order)
     {
-        quicksort.QuickTextSort(Contacts, 0, Contacts.Length - 1, category, order);
+        Quicksort.QuickTextSort(_contacts, 0, _contacts.Length - 1, category, order);
     }
-
+    
     public static void GenerateContacts()
     {
-        Contacts = Generate.GenerateFakeContacts();
+        _contacts = Generate.GenerateFakeContacts();
     }
 }

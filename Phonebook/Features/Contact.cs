@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace Phonebook.Features;
 
 public class Contact(string firstName, string lastName, string mobileNumber, string birthday, string address)

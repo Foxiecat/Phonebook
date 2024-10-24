@@ -1,3 +1,7 @@
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
+
 namespace Phonebook.Features.Utilities;
 
 public class Generate
@@ -47,16 +51,23 @@ public class Generate
         }
         
         // Serialize the fakeContacts array to a JSON string
-        string jsonString = Serialize.Serializer(fakeContacts);
+        string jsonString = Serializer(fakeContacts);
         
         // Writes a JSON file from the jsonString
         File.WriteAllText("../../../Logs/contacts.json", jsonString);
         
         return fakeContacts;
     }
-
-    private static bool Contains(Contact[] contacts, Contact contact)
+    
+    
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        return contacts.Any(target => target.FirstName == contact.FirstName && target.LastName == contact.LastName);
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+    };
+
+    private static string Serializer<T>(T value)
+    {
+        return JsonSerializer.Serialize(value, JsonOptions);
     }
 }
